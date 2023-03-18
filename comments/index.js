@@ -3,22 +3,22 @@ const bodyParser = require('body-parser');
 const { Comments } = require('./database/database');
 const { randomBytes } = require("crypto")
 const app = express();
-const router = express.Router()
 const cors = require('cors');
 
-
-
-app.use(cors());
-app.use(router);
 app.use(bodyParser.json());
+app.use(cors());
+const router = express.Router()
+app.use(router);
 
-router.get('/posts/:id/comments', async (req, res) => {
+
+
+app.get('/posts/:id/comments', async (req, res) => {
     const id = req.params.id; // Id here is the Post Id
     const commentsList = await Comments.findOne((commentObject) => commentObject.id == id);
-    res.send(commentsList);
+    res.send(commentsList?.comments ?? []);
 });
 
-router.post('/posts/:id/comments', async (req, res) => {
+app.post('/posts/:id/comments', async (req, res) => {
     const commentId = randomBytes(4).toString('hex');
     const {content} = req.body;
     const id = req.params.id;
