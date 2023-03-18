@@ -1,25 +1,27 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const {Posts} = require('./database/database');
 const { randomBytes } = require("crypto")
 const app = express();
+const cors = require('cors');
+
 app.use(bodyParser.json());
+app.use(cors());
 
 const router = express.Router()
 
+app.use(router);
 
-const post = {};
-router.get('/posts', (req, res) => {
-    res.send(posts);
+router.get('/posts', async (req, res) => {
+    const postList = await Posts.findAll();
+    res.send(postList);
 });
 
-router.post('/posts', (req, res) => {
+router.post('/posts', async (req, res) => {
     const id = randomBytes(4).toString('hex');
-    const {title} = req.body;
-    post[id] = {
-        id, title
-    }
-
-    res.send(201).send(posts[id]);
+    const response = await Posts.create({ ...req.body, id });
+    console.log(response);
+    res.status(201).send(response);
 });
 
 app.listen(4000, ()=> {
