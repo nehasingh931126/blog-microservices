@@ -4,6 +4,7 @@ const {Posts} = require('./database/database');
 const { randomBytes } = require("crypto")
 const app = express();
 const cors = require('cors');
+const axios = require('axios');
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -20,6 +21,13 @@ router.get('/posts', async (req, res) => {
 router.post('/posts', async (req, res) => {
     const id = randomBytes(4).toString('hex');
     const response = await Posts.create({ ...req.body, id });
+    await axios.post('http://localhost:4005/events', {
+        type: "PostCreated",
+        data: {
+            id: response.id,
+            title: response.title
+        }
+    })
     console.log(response);
     res.status(201).send(response);
 });

@@ -4,6 +4,7 @@ const { Comments } = require('./database/database');
 const { randomBytes } = require("crypto")
 const app = express();
 const cors = require('cors');
+const axios = require('axios');
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -28,6 +29,13 @@ app.post('/posts/:id/comments', async (req, res) => {
     if (commentExists) {
         comments = [...commentExists.comments, contentObject];
         const updateComment = await Comments.update({ id: commentExists.id, comments });
+        await axios.post('http://localhost:4005/events', {
+            type: 'CommentCreated',
+            data: {
+                ...contentObject,
+                postId: id
+            }
+        })
         res.status(200).send(updateComment);
     } else {
         comments = [contentObject];
