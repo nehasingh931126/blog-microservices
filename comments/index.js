@@ -40,6 +40,13 @@ app.post('/posts/:id/comments', async (req, res) => {
     } else {
         comments = [contentObject];
         const createComment = await Comments.create({ id, comments}); 
+        await axios.post('http://localhost:4005/events', {
+            type: 'CommentCreated',
+            data: {
+                ...contentObject,
+                postId: id
+            }
+        })
         res.status(201).send(createComment);
     }
 });
