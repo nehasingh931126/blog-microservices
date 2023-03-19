@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios';
 
-const CommentCreate = ({postId}) => {
+const CommentCreate = ({ postId }) => {
     console.log(postId);
     const [content, setContent] = useState('');
     const handleForm  = async (event) => {

@@ -4,14 +4,17 @@ import CommentCreate from './CommentCreate';
 import CommentList from './CommentList';
 const PostList = () => {
     const [posts, setPosts] = useState([]);
-
+    // const [loadApi, setLoadApi] = useState(true)
     useEffect(() => {
         const fetchPosts = async () => {
-            const res = await axios.get('http://localhost:4000/posts');
+            // const res = await axios.get('http://localhost:4000/posts');
+            const res = await axios.get('http://localhost:4002/posts');
             setPosts(res.data);
         }; fetchPosts()
     }, []);
-
+    // const handleLoadingApi = ()=> {
+    //     setLoadApi(true);
+    // }
     const postListJSX =
         posts.map((post) => {
             return (
@@ -19,8 +22,9 @@ const PostList = () => {
                     style={{ width: '30%', marginBottom: '20px' }}>
                     <div className="card-body">
                         <h5 className="card-title">{post.title}</h5>
-                        <CommentList postId={post.id} />
-                        <CommentCreate postId={post.id}/>
+                        {/* <CommentList postId={post.id} /> */}
+                        <CommentList postId={post.id}  comments={post.comments} />
+                        <CommentCreate postId={post.id} />
                         
                     </div>
                     

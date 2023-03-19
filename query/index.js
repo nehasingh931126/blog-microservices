@@ -22,15 +22,15 @@ app.post('/events', async (req, res) => {
     const event = req.body;
     if (event.type === 'PostCreated'){
         const {id, title} = event.data;
-        const postComent = await PostComment.create({ id, title, comment: [] });
+        const postComent = await PostComment.create({ id, title, comments: [] });
         res.status(200).send(postComent);
     } else if (event.type === 'CommentCreated') {
         const { id, content, postId } = event.data;
         const postCommentObject = await PostComment.findById(postId);
         
-        console.log(postCommentObject.comment);
+        console.log(postCommentObject.comments);
 
-        postCommentObject.comment.push({id, content});
+        postCommentObject.comments.push({id, content});
         await PostComment.update(postCommentObject);
         res.status(201).send(PostComment);
     }
